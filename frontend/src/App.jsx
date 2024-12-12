@@ -13,26 +13,6 @@ function App() {
                             Media Toolkit
                         </h1>
                     </div>
-                    {/*<nav className="space-x-4 hidden md:block">*/}
-                    {/*    <a*/}
-                    {/*        href="#"*/}
-                    {/*        className="text-gray-300 hover:text-white transition-colors font-medium"*/}
-                    {/*    >*/}
-                    {/*        Home*/}
-                    {/*    </a>*/}
-                    {/*    <a*/}
-                    {/*        href="#"*/}
-                    {/*        className="text-gray-300 hover:text-white transition-colors font-medium"*/}
-                    {/*    >*/}
-                    {/*        About*/}
-                    {/*    </a>*/}
-                    {/*    <a*/}
-                    {/*        href="#"*/}
-                    {/*        className="text-gray-300 hover:text-white transition-colors font-medium"*/}
-                    {/*    >*/}
-                    {/*        Contact*/}
-                    {/*    </a>*/}
-                    {/*</nav>*/}
                 </div>
             </header>
 
@@ -41,12 +21,6 @@ function App() {
                     <VideoEditor />
                 </div>
             </main>
-
-            <footer className="absolute bottom-0 left-0 right-0 p-4 text-center">
-                <p className="text-sm text-gray-400">
-                    © {new Date().getFullYear()} Media Toolkit. All rights reserved.
-                </p>
-            </footer>
         </div>
     );
 }
