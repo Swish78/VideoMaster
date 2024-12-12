@@ -4,7 +4,6 @@
 
 VideoMaster is a modern, user-friendly web application that allows you to easily edit videos directly in your browser. With a sleek interface and powerful editing capabilities, VideoMaster makes video manipulation simple and intuitive.
 
-
 ## 🌟 Features
 
 - **Video Trimming**: Cut out unwanted parts of your video
