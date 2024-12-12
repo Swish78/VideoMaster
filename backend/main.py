@@ -1,20 +1,20 @@
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from moviepy import editor
-import moviepy
+import cv2
 import os
+import uuid
+import numpy as np
 import traceback
 
 app = FastAPI()
-
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"]
 )
 
 
@@ -26,12 +26,18 @@ async def edit_video(
         action: str = Form('trim'),
         brightness_factor: float = Form(1.0),
         speed_factor: float = Form(1.0),
-        output_format: str = Form('mp4')
+        overlay_text: str = Form(None),
+        output_format: str = Form('mp4'),
+        width: int = Form(None),
+        height: int = Form(None),
+        crop_x: int = Form(None),
+        crop_y: int = Form(None),
+        crop_width: int = Form(None),
+        crop_height: int = Form(None)
 ):
     try:
         os.makedirs("/tmp", exist_ok=True)
 
-        import uuid
         unique_id = str(uuid.uuid4())
         input_path = f"/tmp/input_{unique_id}.{file.filename.split('.')[-1]}"
         output_path = f"/tmp/edited_{unique_id}.{output_format}"
@@ -39,53 +45,98 @@ async def edit_video(
         with open(input_path, "wb") as buffer:
             buffer.write(await file.read())
 
-        video = editor.VideoFileClip(input_path)
+        cap = cv2.VideoCapture(input_path)
+        if not cap.isOpened():
+            raise HTTPException(status_code=400, detail="Failed to open video file")
 
-        start_time = max(0, start_time)
-        end_time = min(end_time, video.duration) if end_time > 0 else video.duration
+        original_fps = int(cap.get(cv2.CAP_PROP_FPS))
+        original_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        original_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
-        if action == 'trim':
-            left_segment = video.subclip(0, start_time)
-            right_segment = video.subclip(end_time, video.duration)
-            final_video = editor.concatenate_videoclips([left_segment, right_segment])
-        elif action == 'brighten':
-            final_video = video.fx(moviepy.video.fx.all.colorx, brightness_factor)
-        elif action == 'darken':
-            final_video = video.fx(moviepy.video.fx.all.colorx, 1/brightness_factor)
-        elif action == 'speedup':
-            final_video = moviepy.video.fx.all.speedx(video, factor=speed_factor)
-        elif action == 'slowdown':
-            final_video = moviepy.video.fx.all.speedx(video, factor=(1 / speed_factor))
-        else:
-            final_video = video
+        # Determine crop parameters
+        if crop_x is None: crop_x = 0
+        if crop_y is None: crop_y = 0
+        if crop_width is None: crop_width = original_width - crop_x
+        if crop_height is None: crop_height = original_height - crop_y
 
-        final_video.write_videofile(
-            output_path,
-            codec='libx264',
-            fps=video.fps,
-            logger=None  # Suppress logging
-        )
+        # Validate crop parameters
+        if (crop_x < 0 or crop_y < 0 or
+            crop_x + crop_width > original_width or
+            crop_y + crop_height > original_height):
+            raise HTTPException(status_code=400, detail="Invalid crop parameters")
 
-        # Close video clips to free up resources
-        video.close()
-        final_video.close()
+        # Determine output dimensions and FPS
+        width = width or crop_width
+        height = height or crop_height
+        output_fps = int(original_fps * abs(speed_factor))
 
-        # Return the edited video
-        response = FileResponse(
+        # Video writer setup
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(output_path, fourcc, output_fps, (width, height))
+
+        # Frame processing parameters
+        start_frame = int(start_time * original_fps)
+        end_frame = int(end_time * original_fps) if end_time > 0 else frame_count
+
+        frames = []
+        frame_index = 0
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            if start_frame <= frame_index <= end_frame:
+                # Crop frame
+                cropped_frame = frame[crop_y:crop_y+crop_height, crop_x:crop_x+crop_width]
+
+                # Apply various actions
+                if action == 'brighten':
+                    cropped_frame = cv2.convertScaleAbs(cropped_frame, alpha=brightness_factor, beta=0)
+                elif action == 'darken':
+                    cropped_frame = cv2.convertScaleAbs(cropped_frame, alpha=1 / brightness_factor, beta=0)
+                elif action == 'overlay_text' and overlay_text:
+                    cv2.putText(
+                        cropped_frame, overlay_text, (50, 50),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA
+                    )
+                elif action == 'apply_grayscale':
+                    cropped_frame = cv2.cvtColor(cropped_frame, cv2.COLOR_BGR2GRAY)
+                    cropped_frame = cv2.cvtColor(cropped_frame, cv2.COLOR_GRAY2BGR)
+                elif action == 'apply_sepia':
+                    cropped_frame = cv2.transform(cropped_frame, np.array([[0.272, 0.534, 0.131],
+                                                                           [0.349, 0.686, 0.168],
+                                                                           [0.393, 0.769, 0.189]]))
+                elif action == 'negative':
+                    cropped_frame = cv2.bitwise_not(cropped_frame)
+
+                # Resize frame if needed
+                cropped_frame = cv2.resize(cropped_frame, (width, height))
+
+                # Handle speed control and frame selection
+                if speed_factor > 0:
+                    # Forward playback: select frames based on speed
+                    if frame_index % max(1, int(1/speed_factor)) == 0:
+                        frames.append(cropped_frame)
+                else:
+                    # Reverse playback
+                    frames.insert(0, cropped_frame)
+
+            frame_index += 1
+
+        cap.release()
+
+        # Write frames to output video
+        for frame in frames:
+            out.write(frame)
+
+        out.release()
+
+        return FileResponse(
             output_path,
             media_type=f"video/{output_format}",
             filename=f"edited_video.{output_format}"
         )
-
-        @response.background_task
-        def cleanup():
-            try:
-                os.unlink(input_path)
-                os.unlink(output_path)
-            except Exception:
-                pass
-
-        return response
 
     except Exception as e:
         print(f"Error processing video: {str(e)}")
