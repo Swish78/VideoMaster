@@ -1,3 +1,5 @@
+I'll update the README to include the new text overlay feature and adjust the content accordingly.
+
 # VideoMaster 🎬✂️
 
 ## Overview
@@ -9,6 +11,9 @@ VideoMaster is a modern, user-friendly web application that allows you to easily
 - **Video Trimming**: Cut out unwanted parts of your video
 - **Brightness Adjustment**: Lighten or darken your video
 - **Speed Control**: Speed up or slow down video playback
+- **Text Overlay**: Add custom text directly to your video
+- **Video Effects**: Apply grayscale, sepia, and negative filters
+- **Cropping**: Customize video dimensions
 - **Multiple Format Support**: Export in MP4, AVI, and MOV formats
 - **Responsive Design**: Works on desktop and mobile devices
 
@@ -22,7 +27,7 @@ VideoMaster is a modern, user-friendly web application that allows you to easily
 
 ### Backend
 - FastAPI
-- MoviePy
+- OpenCV
 - Python
 
 ## 📦 Prerequisites
@@ -56,7 +61,7 @@ npm start
 
 1. Navigate to backend directory
 ```bash
-cd cd backend
+cd backend
 ```
 
 2. Create a virtual environment
@@ -78,10 +83,22 @@ uvicorn main:app --reload
 ## 🖥 Usage
 
 1. Upload your video
-2. Select an editing action (Trim, Brighten, Darken, Speed Up, Slow Down)
+2. Select an editing action:
+   - Trim
+   - Brighten/Darken
+   - Apply Grayscale/Sepia/Negative Filter
+   - Add Text Overlay
 3. Configure parameters
 4. Click "Edit Video"
 5. Download your edited video
+
+## ✨ New: Text Overlay Feature
+
+VideoMaster now supports adding custom text directly to your videos! 
+
+- Select the "Overlay Text" action
+- Enter your desired text
+- The text will be displayed on your video, perfect for adding captions, watermarks, or creative annotations
 
 ## 🤝 Contributing
 
@@ -106,5 +123,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 - [React](https://reactjs.org/)
 - [FastAPI](https://fastapi.tiangolo.com/)
-- [MoviePy](https://zulko.github.io/moviepy/)
+- [OpenCV](https://opencv.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
