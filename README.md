@@ -1,5 +1,3 @@
-I'll update the README to include the new text overlay feature and adjust the content accordingly.
-
 # VideoMaster 🎬✂️
 
 ## Overview
