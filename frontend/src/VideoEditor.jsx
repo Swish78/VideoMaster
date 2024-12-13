@@ -13,10 +13,8 @@ function VideoEditor() {
     const [downloadLink, setDownloadLink] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    // New state for overlay text
     const [overlayText, setOverlayText] = useState('');
 
-    // New crop parameters
     const [cropX, setCropX] = useState(0);
     const [cropY, setCropY] = useState(0);
     const [cropWidth, setCropWidth] = useState(null);
@@ -40,12 +38,10 @@ function VideoEditor() {
         formData.append('speed_factor', speed);
         formData.append('output_format', format);
 
-        // Add overlay text if the action is overlay_text
         if (action === 'overlay_text' && overlayText) {
             formData.append('overlay_text', overlayText);
         }
 
-        // Add crop parameters
         formData.append('crop_x', cropX);
         formData.append('crop_y', cropY);
         if (cropWidth) formData.append('crop_width', cropWidth);
@@ -86,7 +82,6 @@ function VideoEditor() {
                 </h1>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* File Upload (unchanged) */}
                     <div className="relative">
                         <input
                             type="file"
@@ -107,7 +102,6 @@ function VideoEditor() {
                         </label>
                     </div>
 
-                    {/* Time Parameters (unchanged) */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="flex items-center text-gray-300 mb-2">
@@ -138,8 +132,6 @@ function VideoEditor() {
                             />
                         </div>
                     </div>
-
-                    {/* Action Selection */}
                     <div>
                         <label className="flex items-center text-gray-300 mb-2">
                             <Edit className="mr-2 text-blue-400" size={18} />
@@ -160,7 +152,6 @@ function VideoEditor() {
                         </select>
                     </div>
 
-                    {/* Overlay Text Input */}
                     {action === 'overlay_text' && (
                         <div>
                             <label className="flex items-center text-gray-300 mb-2">
@@ -177,7 +168,6 @@ function VideoEditor() {
                         </div>
                     )}
 
-                    {/* Brightness Control */}
                     {['brighten', 'darken'].includes(action) && (
                         <div>
                             <label className="flex items-center text-gray-300 mb-2">
@@ -196,7 +186,6 @@ function VideoEditor() {
                         </div>
                     )}
 
-                    {/* Speed Control */}
                     <div>
                         <label className="flex items-center text-gray-300 mb-2">
                             <ZoomOut className="mr-2 text-blue-400" size={18} />
@@ -216,8 +205,6 @@ function VideoEditor() {
                         </p>
                     </div>
 
-                    {/* Rest of the component remains the same... */}
-                    {/* Crop Parameters */}
                     <div>
                         <label className="flex items-center text-gray-300 mb-2">
                             <Crop className="mr-2 text-blue-400" size={18} />
@@ -258,7 +245,6 @@ function VideoEditor() {
                         </p>
                     </div>
 
-                    {/* Output Format */}
                     <div>
                         <label className="flex items-center text-gray-300 mb-2">
                             <Copy className="mr-2 text-blue-400" size={18} />
@@ -275,7 +261,6 @@ function VideoEditor() {
                         </select>
                     </div>
 
-                    {/* Submit Button */}
                     <button
                         type="submit"
                         disabled={!file || isLoading}
@@ -291,7 +276,6 @@ function VideoEditor() {
                     </button>
                 </form>
 
-                {/* Download Button */}
                 {downloadLink && (
                     <div className="mt-4">
                         <button
