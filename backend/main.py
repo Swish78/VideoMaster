@@ -1,13 +1,16 @@
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 import cv2
 import os
 import uuid
 import numpy as np
 import traceback
+from mangum import Mangum
 
-app = FastAPI()
+app = FastAPI(title='VideoMaster')
+handler = Mangum(app)
 
 app.add_middleware(
     CORSMiddleware,
@@ -16,6 +19,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
 
 
 @app.post("/edit_video/")
@@ -110,10 +118,8 @@ async def edit_video(
                 elif action == 'negative':
                     cropped_frame = cv2.bitwise_not(cropped_frame)
 
-                # Resize frame if needed
                 cropped_frame = cv2.resize(cropped_frame, (width, height))
 
-                # Handle speed control and frame selection
                 if speed_factor > 0:
                     # Forward playback: select frames based on speed
                     if frame_index % max(1, int(1/speed_factor)) == 0:
@@ -144,5 +150,4 @@ async def edit_video(
         raise HTTPException(status_code=500, detail=f"Video processing error: {str(e)}")
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
