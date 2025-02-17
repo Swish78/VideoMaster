@@ -1,106 +1,129 @@
-# VideoMaster 🎬✂️
+# VideoMaster 🎬✨
 
 ## Overview
 
-VideoMaster is a modern, user-friendly web application that allows you to easily edit videos directly in your browser. With a sleek interface and powerful editing capabilities, VideoMaster makes video manipulation simple and intuitive.
+VideoMaster is a powerful, modern web application for video editing that combines high performance with ease of use. Built with an optimized backend and responsive frontend, it handles video processing efficiently while providing real-time feedback and monitoring.
 
 ## 🌟 Features
 
-- **Video Trimming**: Cut out unwanted parts of your video
-- **Brightness Adjustment**: Lighten or darken your video
-- **Speed Control**: Speed up or slow down video playback
-- **Text Overlay**: Add custom text directly to your video
-- **Video Effects**: Apply grayscale, sepia, and negative filters
-- **Cropping**: Customize video dimensions
+### Video Processing
 - **Multiple Format Support**: Export in MP4, AVI, and MOV formats
-- **Responsive Design**: Works on desktop and mobile devices
+- **Video Effects**: 
+  - Basic: Trim, Brighten, Darken
+  - Speed: Adjust playback speed with interpolation options
+  - Filters: Sepia, Cool Tone, Warm Tone, Grayscale, Negative
+  - Blur Effects: Gaussian, Motion, Radial
+- **Text Overlay**: Add custom text with position and styling options
+- **Dimension Control**: Resize and crop videos
+- **Batch Processing**: Efficient frame-by-frame processing
+
+### Performance & Monitoring
+- **Real-time Progress Tracking**: Monitor video processing progress
+- **System Health Dashboard**: 
+  - Memory usage monitoring
+  - CPU utilization tracking
+  - Active jobs counter
+  - Current time display
+- **Asynchronous Processing**: Background video processing with job management
+- **Memory Optimization**: Efficient batch processing of frames
+
+### User Interface
+- **Modern Design**: Clean, intuitive interface with Tailwind CSS
+- **Tabbed Controls**: Organized into Basic, Advanced, and Output settings
+- **Real-time Feedback**: Processing status and progress indicators
+- **Responsive Layout**: Adapts to different screen sizes
+- **Keyboard Shortcuts**: Enhanced productivity with keyboard controls
 
 ## 🛠 Tech Stack
 
 ### Frontend
 - React
 - Tailwind CSS
-- Axios
+- Axios for API communication
 - Lucide React Icons
 
 ### Backend
 - FastAPI
-- OpenCV
-- Python
+- OpenCV for video processing
+- Python 3.9+
+- Async processing with BackgroundTasks
 
-## 📦 Prerequisites
+## 🚀 Getting Started
 
+### Prerequisites
 - Node.js (v14+)
 - Python (v3.9+)
 - pip
 - npm
 
-## 🚀 Installation
-
 ### Frontend Setup
-
-1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/videomaster.git
-cd videomaster/frontend
-```
+# Navigate to frontend directory
+cd frontend
 
-2. Install dependencies
-```bash
+# Install dependencies
 npm install
-```
 
-3. Start the development server
-```bash
+# Start development server
 npm start
 ```
 
 ### Backend Setup
-
-1. Navigate to backend directory
 ```bash
+# Navigate to backend directory
 cd backend
-```
 
-2. Create a virtual environment
-```bash
+# Create virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-```
 
-3. Install dependencies
-```bash
+# Install dependencies
 pip install -r requirements.txt
-```
 
-4. Run the backend server
-```bash
+# Start backend server
 uvicorn main:app --reload
 ```
 
-## 🖥 Usage
+## 💡 Usage
 
-1. Upload your video
-2. Select an editing action:
-   - Trim
-   - Brighten/Darken
-   - Apply Grayscale/Sepia/Negative Filter
-   - Add Text Overlay
-3. Configure parameters
-4. Click "Edit Video"
-5. Download your edited video
+1. **Upload Video**
+   - Click the upload area or drag and drop your video file
+   - Supported formats: MP4, AVI, MOV
 
-## ✨ New: Text Overlay Feature
+2. **Choose Effect**
+   - Select from various effects in the Basic tab
+   - Configure advanced settings if needed
+   - Set output format and dimensions in the Output tab
 
-VideoMaster now supports adding custom text directly to your videos! 
+3. **Process Video**
+   - Click "Process Video" to start
+   - Monitor progress in real-time
+   - Download processed video when complete
 
-- Select the "Overlay Text" action
-- Enter your desired text
-- The text will be displayed on your video, perfect for adding captions, watermarks, or creative annotations
+4. **System Monitoring**
+   - Track system resources in the health dashboard
+   - Monitor active jobs and processing status
+
+## ⚡ Performance Features
+
+### Batch Processing
+- Processes video in batches of 30 frames
+- Optimizes memory usage
+- Immediate disk writing for processed frames
+
+### Async Processing
+- Non-blocking video processing
+- Real-time progress tracking
+- Job management system
+
+### Memory Management
+- Efficient frame batch processing
+- Automatic memory cleanup
+- Optimized resource utilization
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
+We welcome contributions! Please follow these steps:
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -108,16 +131,11 @@ Contributions are welcome! Please follow these steps:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 🐛 Known Issues
-
-- Large video files may take longer to process
-- Some complex video formats might have limited support
-
 ## 📝 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-## 🙌 Acknowledgements
+## 🙏 Acknowledgements
 
 - [React](https://reactjs.org/)
 - [FastAPI](https://fastapi.tiangolo.com/)
