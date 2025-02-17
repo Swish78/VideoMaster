@@ -10,7 +10,7 @@ function App() {
                     <div className="flex items-center space-x-3">
                         <Waves className="text-blue-400" size={32} />
                         <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-                            Media Toolkit
+                            VideoMaster
                         </h1>
                     </div>
                 </div>
